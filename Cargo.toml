@@ -3,5 +3,9 @@ name = "aoc2022"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+lto = true
+
 [lib]
-name = "rv32"
+name = "virt"
+path = "src/virt/lib.rs"
