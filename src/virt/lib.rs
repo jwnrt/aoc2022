@@ -1,6 +1,8 @@
 #![no_std]
 #![no_main]
 
+pub mod uart;
+
 use core::arch::global_asm;
 
 #[panic_handler]
