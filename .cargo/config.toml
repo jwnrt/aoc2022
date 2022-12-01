@@ -1,0 +1,6 @@
+[build]
+target = "riscv32imac-unknown-none-elf"
+
+[target.riscv32imac-unknown-none-elf]
+rustflags = ["-Clink-arg=-Tqemu_rv32_virt.ld"]
+runner = "qemu-system-riscv32 -nographic -machine virt -bios none -kernel "
