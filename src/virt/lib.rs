@@ -32,7 +32,8 @@ fn panic_fmt(_: &core::panic::PanicInfo) -> ! {
  */
 
 global_asm! { r#"
-.equ STACK_SIZE, 1024
+# Megabyte of stack
+.equ STACK_SIZE, 1036288
 
 .global _start
 
