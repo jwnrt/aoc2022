@@ -9,3 +9,6 @@ lto = true
 [lib]
 name = "virt"
 path = "src/virt/lib.rs"
+
+[[bin]]
+name = "hello-world"
