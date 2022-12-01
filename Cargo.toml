@@ -12,3 +12,6 @@ path = "src/virt/lib.rs"
 
 [[bin]]
 name = "hello-world"
+
+[[bin]]
+name = "echo"
