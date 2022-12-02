@@ -9,12 +9,3 @@ lto = true
 [lib]
 name = "virt"
 path = "src/virt/lib.rs"
-
-[[bin]]
-name = "hello-world"
-
-[[bin]]
-name = "echo"
-
-[[bin]]
-name = "day1"
