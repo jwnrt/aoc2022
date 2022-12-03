@@ -4,9 +4,17 @@
 pub mod uart;
 
 use core::arch::global_asm;
+use core::fmt::Write;
+use core::panic::PanicInfo;
+
+use uart::Uart;
 
 #[panic_handler]
-fn panic_fmt(_: &core::panic::PanicInfo) -> ! {
+fn panic_fmt(info: &PanicInfo) -> ! {
+    let mut uart = Uart::new();
+
+    writeln!(uart, "{info}").ok();
+
     loop {}
 }
 
