@@ -16,7 +16,10 @@ fn main() -> ! {
 
     let mut total_priority = 0;
 
-    for line in lines {
+    let mut total_group_priority = 0;
+    let mut group_badge_bitset = u64::MAX;
+
+    for (i, line) in lines.enumerate() {
         if line.len() == 0 || line.len() % 2 == 1 {
             continue;
         }
@@ -29,9 +32,20 @@ fn main() -> ! {
         let priority = shared.ilog2();
 
         total_priority += priority;
+
+        let full_bitset = count_items(line);
+        group_badge_bitset &= full_bitset;
+
+        if i % 3 == 2 {
+            let group_priority = group_badge_bitset.ilog2();
+            total_group_priority += group_priority;
+
+            group_badge_bitset = u64::MAX;
+        }
     }
 
     writeln!(uart, "Total priority: {total_priority}").unwrap();
+    writeln!(uart, "Total group priority: {total_group_priority}").unwrap();
 
     loop {}
 }
