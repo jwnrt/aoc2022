@@ -1,8 +1,8 @@
 #![no_std]
 #![no_main]
 
+use core::cmp;
 use core::fmt::Write;
-use core::{cmp, str};
 
 extern crate virt;
 use virt::uart::Uart;
@@ -11,11 +11,7 @@ use virt::uart::Uart;
 fn main() -> ! {
     let mut uart = Uart::new();
 
-    // Allow 32Kb for input
-    let mut input_buf = [0u8; 32 * 1024];
-    let input_len = uart.read_buf(&mut input_buf);
-    let input_str = str::from_utf8(&input_buf[0..input_len]).unwrap();
-
+    let input_str = include_str!("data/day1.txt");
     let lines = input_str.split('\n');
 
     let mut accumulator = 0;
