@@ -3,7 +3,6 @@ use core::fmt;
 pub struct Uart;
 
 impl Uart {
-    // TODO: if on nightly, use `ptr::with_addr` for provenance.
     const BASE_ADDR: *mut u8 = 0x10000000 as *mut u8;
 
     // Register offsets
