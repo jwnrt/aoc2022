@@ -15,7 +15,8 @@ fn main() -> ! {
     let input_str = include_str!("data/day4.txt");
     let lines = input_str.split('\n');
 
-    let mut total = 0;
+    let mut fully_overlap = 0;
+    let mut part_overlap = 0;
 
     for line in lines {
         if line.len() == 0 {
@@ -30,11 +31,19 @@ fn main() -> ! {
         let second_in_first = second.start() <= first.start() && second.end() >= first.end();
 
         if first_in_second || second_in_first {
-            total += 1;
+            fully_overlap += 1;
+        }
+
+        let first_overlap = first.start() <= second.start() && first.end() >= second.start();
+        let second_overlap = second.start() <= first.start() && second.end() >= first.start();
+
+        if first_overlap || second_overlap {
+            part_overlap += 1;
         }
     }
 
-    writeln!(uart, "overlapped assignments: {total}").unwrap();
+    writeln!(uart, "Fully overlapping: {fully_overlap}").unwrap();
+    writeln!(uart, "Partially overlapping: {part_overlap}").unwrap();
 
     loop {}
 }
