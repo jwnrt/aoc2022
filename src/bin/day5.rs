@@ -38,27 +38,34 @@ fn main() -> ! {
     let input_str = include_str!("data/day5.txt");
     let mut lines = input_str.lines();
 
+    let mut print_tops = |stacks: &[Option<Stack>; MAX_STACKS]| {
+        stacks
+            .iter()
+            .flatten()
+            .map(|stack| stack.buf[stack.height - 1].unwrap_or('*'))
+            .for_each(|top| write!(uart, "{top}").unwrap());
+        writeln!(uart).unwrap();
+    };
+
     let stacks = parse_stacks::<MAX_STACKS>(&mut lines);
     let mut stacks_9000 = stacks.clone();
     let mut stacks_9001 = stacks.clone();
 
     for line in lines.clone().filter(|line| line.len() > 0) {
-        let Command { count, from, to } = parse_command(line);
+        let command = parse_command(line);
 
-        for _ in 0..count {
-            move_crate(&mut stacks_9000, from, to);
-            move_crate(&mut stacks_9001, from, to);
+        // Move one crate at a time `command.count` times
+        for _ in 0..command.count {
+            move_crate(
+                &mut stacks_9000,
+                Command {
+                    count: 1,
+                    ..command
+                },
+            );
         }
+        move_crate(&mut stacks_9001, command);
     }
-
-    let mut print_tops = |stacks: &[Option<Stack>; MAX_STACKS]| {
-        stacks
-            .iter()
-            .flatten()
-            .map(|stack| stack.buf[stack.height - 1].unwrap_or(' '))
-            .for_each(|top| write!(uart, "{top}").unwrap());
-        writeln!(uart).unwrap();
-    };
 
     print_tops(&stacks_9000);
     print_tops(&stacks_9001);
@@ -133,18 +140,17 @@ fn parse_command(line: &str) -> Command {
     Command { count, from, to }
 }
 
-fn move_crate(stacks: &mut [Option<Stack>; MAX_STACKS], from: usize, to: usize) {
-    let stack_from = stacks.get_mut(from).unwrap().as_mut().unwrap();
-    let c = stack_from.buf[stack_from.height - 1].take();
-    stack_from.height -= 1;
+fn move_crate(stacks: &mut [Option<Stack>; MAX_STACKS], command: Command) {
+    let Command { count, from, to } = command;
 
-    let stack_to = stacks.get_mut(to).unwrap().as_mut().unwrap();
-    stack_to.buf[stack_to.height] = c;
-    stack_to.height += 1;
-}
+    for i in 0..command.count {
+        let stack_from = stacks[from].as_mut().unwrap();
+        let c = stack_from.buf[stack_from.height - count + i].take();
 
-        let stack_to = stacks.get_mut(to).unwrap().as_mut().unwrap();
-        stack_to.buf[stack_to.height] = c;
-        stack_to.height += 1;
+        let stack_to = stacks[to].as_mut().unwrap();
+        stack_to.buf[stack_to.height + i] = c;
     }
+
+    stacks[from].as_mut().unwrap().height -= count;
+    stacks[to].as_mut().unwrap().height += count;
 }
